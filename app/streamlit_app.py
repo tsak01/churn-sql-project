@@ -19,11 +19,12 @@ st.set_page_config(
 def get_engine():
     connection_url = URL.create(
         "postgresql+psycopg2",
-        username="postgres",
+        username=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
-        host="localhost",
+        host=os.getenv("DB_HOST"),
         port=5432,
-        database="telco_churn"
+        database=os.getenv("DB_NAME"),
+        query={"sslmode": "require"}
     )
     return create_engine(connection_url)
 

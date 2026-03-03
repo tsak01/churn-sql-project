@@ -2,6 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine, URL, text
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
 # Load CSV
@@ -12,18 +13,19 @@ df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
 df.dropna(subset=["TotalCharges"], inplace=True)
 print(f"Rows after cleaning: {len(df)}")
 
-# Connect to PostgreSQL
+# Connect to Neon PostgreSQL
 connection_url = URL.create(
     "postgresql+psycopg2",
-    username="postgres",
+    username=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
-    host="localhost",
+    host=os.getenv("DB_HOST"),
     port=5432,
-    database="telco_churn"
+    database=os.getenv("DB_NAME"),
+    query={"sslmode": "require"}
 )
 engine = create_engine(connection_url)
 
-# Drop tables in correct order first
+# Drop tables in correct order
 with engine.connect() as conn:
     conn.execute(text("DROP TABLE IF EXISTS subscriptions CASCADE"))
     conn.execute(text("DROP TABLE IF EXISTS plans CASCADE"))
@@ -62,4 +64,4 @@ subs.insert(0, "subscription_id", range(1, len(subs)+1))
 subs.to_sql("subscriptions", engine, if_exists="replace", index=False)
 print("subscriptions table loaded!")
 
-print("\nAll done! All 3 tables loaded into PostgreSQL!")
+print("\nAll done! All 3 tables loaded into Neon PostgreSQL!")
