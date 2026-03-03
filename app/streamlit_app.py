@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine, URL
-from dotenv import load_dotenv
-import os
-load_dotenv()
 
 # ── Page Config ──
 st.set_page_config(
@@ -19,11 +16,11 @@ st.set_page_config(
 def get_engine():
     connection_url = URL.create(
         "postgresql+psycopg2",
-        username=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        host=os.getenv("DB_HOST"),
+        username=st.secrets["DB_USER"],
+        password=st.secrets["DB_PASSWORD"],
+        host=st.secrets["DB_HOST"],
         port=5432,
-        database=os.getenv("DB_NAME"),
+        database=st.secrets["DB_NAME"],
         query={"sslmode": "require"}
     )
     return create_engine(connection_url)
