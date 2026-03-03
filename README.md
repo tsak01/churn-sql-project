@@ -36,7 +36,7 @@ churn-sql-project/
 ```
 
 ## 🚀 Live Dashboard
-[Add your Streamlit Cloud link here after deployment]
+(https://tsak01-churn-sql-project.streamlit.app/)
 
 ## 💻 Run Locally
 ```bash
